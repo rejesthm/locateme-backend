@@ -18,6 +18,7 @@ use App\Http\Controllers\DataController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
 $api = app('Dingo\Api\Routing\Router');
 
 
@@ -27,17 +28,13 @@ $params = [
     'middleware' => ['jwt.verify']
 ];
 
-// $api->version('v1', function ($api){
-//     $api->get('/index', IndexController::class . '@getIndex');
-//     $api->post('/register', AuthenticationController::class . '@register');
-//     $api->post('/authenticate', AuthenticationController::class . '@authenticate');
-// });
+$api->version('v1', function ($api) {
+    $api->get('/', IndexController::class . '@getIndex');
+    $api->post('/register', AuthenticationController::class . '@register');
+    $api->post('/authenticate', AuthenticationController::class . '@authenticate');
+});
 
-// $api->group($params, function ($api) {
+$api->group($params, function ($api) {
 
-//         $api->get('closed', DataController::class . '@closed');
-//     // $api->group(['middleware' => ['jwt.verify']], function($api) {
-
-//     // });
-
-// });
+    $api->get('closed', DataController::class . '@closed');
+});
