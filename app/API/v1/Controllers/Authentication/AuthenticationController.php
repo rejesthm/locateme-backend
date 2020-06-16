@@ -20,14 +20,16 @@ class AuthenticationController extends Controller
         $credentials = $request->only('email', 'password');
 
         try {
-            if (! $token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'invalid_credentials'], 400);
+            if (!$token = JWTAuth::attempt($credentials)) {
+                return $this->standardResponse('invalid_credentials', $credentials, 400);
+                // return response()->json(['error' => 'invalid_credentials'], 400);
             }
         } catch (JWTException $e) {
-            return response()->json(['error' => 'could_not_create_token'], 500);
+            return $this->standardResponse($e->getMessage(), $credentials, $e->getCode(), $e->getTrace());
+            // return response()->json(['error' => 'could_not_create_token'], 500);
         }
 
-        return response()->json(compact('token'));
+        return $this->standardResponse('Login Successfuly', ['token' => $token]);
     }
 
     public function register(Request $request)
@@ -51,31 +53,29 @@ class AuthenticationController extends Controller
 
         $token = JWTAuth::fromUser($user);
 
-        return response()->json(compact('user','token'),201);
+
+        return $this->standardResponse('Registered Successfuly', ['token' => $token, 'user' => $user]);
+        // return response()->json(compact('user', 'token'), 201);
     }
 
     public function getAuthenticatedUser()
-        {
-                try {
+    {
+        try {
 
-                        if (! $user = JWTAuth::parseToken()->authenticate()) {
-                                return response()->json(['user_not_found'], 404);
-                        }
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['user_not_found'], 404);
+            }
+        } catch (TokenExpiredException $e) {
 
-                } catch (TokenExpiredException $e) {
+            return response()->json(['token_expired'], $e->getMessage());
+        } catch (TokenInvalidException $e) {
 
-                        return response()->json(['token_expired'], $e->getMessage());
+            return response()->json(['token_invalid'], $e->getMessage());
+        } catch (JWTException $e) {
 
-                } catch (TokenInvalidException $e) {
-
-                        return response()->json(['token_invalid'], $e->getMessage());
-
-                } catch (JWTException $e) {
-
-                        return response()->json(['token_absent'], $e->getMessage());
-
-                }
-
-                return response()->json(compact('user'));
+            return response()->json(['token_absent'], $e->getMessage());
         }
+
+        return response()->json(compact('user'));
+    }
 }
