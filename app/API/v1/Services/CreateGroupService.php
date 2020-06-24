@@ -9,7 +9,9 @@ class CreateGroupService
 {
     public function actionGroup($data)
     {
-        $model = Groups::query()->find($data['id']);
+        if(!empty($data['id'])){
+            $model = Groups::query()->find($data['id']);
+        }
         if (empty($model)) {
             $model = new Groups();
         }
