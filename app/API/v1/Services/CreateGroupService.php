@@ -3,7 +3,7 @@
 
 namespace App\API\v1\Services;
 
-use App\Groups;
+use App\API\v1\Models\Groups;
 
 class CreateGroupService
 {
@@ -13,11 +13,13 @@ class CreateGroupService
         if (empty($model)) {
             $model = new Groups();
         }
-
         $model->group_name = $data['group_name'];
-        $model->group_destination = $data['group_destination'];
-        $model->group_status = 1;
-        $model->date = $data['date'];
+        $model->group_destination = $data['group_destination_name'];
+        $model->destination_lat = $data['destination_lat'];
+        $model->destination_long = $data['destination_long'];
+        $model->group_image_url = $data['group_image_url'];
+        $model->creator_id = $data['creator_id'];
+        $model->date = now();
 
         if (!$model->save()) {
             throw new \Exception("Unable to save group", 500);

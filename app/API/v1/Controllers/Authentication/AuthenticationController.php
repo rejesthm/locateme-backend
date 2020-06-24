@@ -3,6 +3,7 @@
 
 namespace App\API\v1\Controllers\Authentication;
 
+use App\Groups;
 use App\Http\Controllers\Controller;
 use App\User;
 use DateTime;

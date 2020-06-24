@@ -19,6 +19,7 @@ class CreateGroupsTable extends Migration
             $table->string('group_destination');
             $table->string('destination_lat');
             $table->string('destination_long');
+            $table->string('group_image_url');
             $table->string('group_status');
             $table->string('creator_id');
             $table->date('date')->format('d/m/Y');
