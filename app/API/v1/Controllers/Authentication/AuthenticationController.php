@@ -5,6 +5,7 @@ namespace App\API\v1\Controllers\Authentication;
 
 use App\Http\Controllers\Controller;
 use App\User;
+use DateTime;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -22,14 +23,12 @@ class AuthenticationController extends Controller
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
                 return $this->standardResponse('invalid_credentials', $credentials, 400);
-                // return response()->json(['error' => 'invalid_credentials'], 400);
             }
+            $user = User::where('email', $credentials['email'])->first();
+            return $this->standardResponse('Login Successfuly', ['token' => $token, 'userInformation' => $user]);
         } catch (JWTException $e) {
             return $this->standardResponse($e->getMessage(), $credentials, $e->getCode(), $e->getTrace());
-            // return response()->json(['error' => 'could_not_create_token'], 500);
         }
-
-        return $this->standardResponse('Login Successfuly', ['token' => $token]);
     }
 
     public function register(Request $request)
@@ -44,8 +43,12 @@ class AuthenticationController extends Controller
         // if($validator->fails()){
         //         return response()->json($validator->errors()->toJson(), 400);
         // }
+        $getFirstName = explode(' ', trim($request->get('fullname')));
+
+        $user_url = $getFirstName[0] . '-user-' . time();
 
         $user = User::create([
+            'user_id' => strtolower($user_url),
             'fullname' => $request->get('fullname'),
             'email' => $request->get('email'),
             'password' => Hash::make($request->get('password')),
@@ -55,7 +58,6 @@ class AuthenticationController extends Controller
 
 
         return $this->standardResponse('Registered Successfuly', ['token' => $token, 'user' => $user]);
-        // return response()->json(compact('user', 'token'), 201);
     }
 
     public function getAuthenticatedUser()
