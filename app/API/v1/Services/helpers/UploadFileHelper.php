@@ -19,10 +19,11 @@ class UploadFileHelper
         $directory = "images/" . $this->_directory . "/";
         $status = $file->move(public_path($directory), $fileName);
 
-        $photoUrl = url($directory . $fileName);
+        $directoryFileName = $directory . $fileName;
+        // $photoUrl = url($directoryFileName);
         if (!$status) {
             throw new \Exception("Unable to save photo", 500);
         }
-        return $photoUrl;
+        return $directoryFileName;
     }
 }

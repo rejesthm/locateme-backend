@@ -23,14 +23,15 @@ class CreateGroupController extends Controller
         ];
 
         $fileHelper = new UploadFileHelper("groups");
-        $data['group_image_url'] = $fileHelper->uploadFile($request->file('group_image'), $data['group_destination_name']);
+        $url = $fileHelper->uploadFile($request->file('group_image'), $data['group_destination_name']);
 
         try {
-
             $service = new CreateGroupService();
+            $data['group_image_url'] = $url;
             $response = $service->actionGroup($data);
             return $this->standardResponse('Group Registered Successfuly', [$response]);
         } catch (\Exception $e) {
+            File::delete($url);
             return $this->standardResponse($e->getMessage(), $data, $e->getCode(), $e->getTrace());
         }
     }
