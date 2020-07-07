@@ -19,7 +19,7 @@ class ProfileController extends Controller
             'profile_image'    => $request->input('profile_image'),
         ];
         $fileHelper = new UploadFileHelper("profile");
-        $url = $fileHelper->uploadFile($request->file('profile_image'), $data['profile_image']);
+        $url = $fileHelper->uploadFile($request->file('profile_image'), Auth::user()->user_id);
 
         DB::beginTransaction();
         try {
@@ -32,6 +32,17 @@ class ProfileController extends Controller
             DB::rollback();
             File::delete($url);
             return $this->standardResponse($e->getMessage(), $data, $e->getCode(), $e->getTrace());
+        }
+    }
+
+    public function fetchUserInfo(Request $request)
+    {
+        try {
+            $service = new ProfileService();
+            $response = $service->fetchUserInfo();
+            return $this->standardResponse('Fetched succesfully', $response);
+        } catch (\Exception $e) {
+            return $this->standardResponse($e->getMessage(), [], $e->getCode(), $e->getTrace());
         }
     }
 }
