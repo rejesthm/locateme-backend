@@ -15,15 +15,19 @@ class UploadFileHelper
     public function uploadFile($file, $groupName)
     {
         $stripName = str_replace(' ', '_', $groupName);
-        $fileName = strtolower($stripName) . '-group-photo-' . time() . '.' . $file->extension();
+        $fileName = strtolower($stripName) . '-' . $this->_directory . '-photo-' . time() . '.' . $file->extension();
         $directory = "images/" . $this->_directory . "/";
         $status = $file->move(public_path($directory), $fileName);
 
         $directoryFileName = $directory . $fileName;
-        // $photoUrl = url($directoryFileName);
         if (!$status) {
             throw new \Exception("Unable to save photo", 500);
         }
         return $directoryFileName;
+    }
+
+    public function getFile($file)
+    {
+        return asset($file);
     }
 }
