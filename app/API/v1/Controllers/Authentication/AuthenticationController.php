@@ -3,6 +3,7 @@
 
 namespace App\API\v1\Controllers\Authentication;
 
+use App\API\v1\Services\helpers\UploadFileHelper;
 use App\Groups;
 use App\Http\Controllers\Controller;
 use App\User;
@@ -20,12 +21,14 @@ class AuthenticationController extends Controller
     public function authenticate(Request $request)
     {
         $credentials = $request->only('email', 'password');
-
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
                 return $this->standardResponse('invalid_credentials', $credentials, 400);
             }
             $user = User::where('email', $credentials['email'])->first();
+
+            $uploadFileHelper = new UploadFileHelper("profile");
+            $user->profile_image = $uploadFileHelper->getFile($user->profile_image);
             return $this->standardResponse('Login Successfuly', ['token' => $token, 'userInformation' => $user]);
         } catch (JWTException $e) {
             return $this->standardResponse($e->getMessage(), $credentials, $e->getCode(), $e->getTrace());
