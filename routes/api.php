@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\API\V1\Controllers\IndexController;
 use App\API\v1\Controllers\Authentication\AuthenticationController;
 use App\API\v1\Controllers\CreateGroup\CreateGroupController;
+use App\API\v1\Controllers\Profile\ProfileController;
 use App\API\v1\Controllers\Search\SearchController;
 use App\Http\Controllers\DataController;
 
@@ -39,6 +40,8 @@ $api->version('v1', function ($api) {
 $api->group($params, function ($api) {
     $api->post('/create-group', CreateGroupController::class . '@createGroup');
     $api->get('/search-user', SearchController::class . '@searchUser');
+    $api->get('/user-info', ProfileController::class . '@fetchUserInfo');
+    $api->post('/profile-photo/update', ProfileController::class . '@uploadProfileImage');
 
 
     $api->get('/closed', DataController::class . '@closed');
