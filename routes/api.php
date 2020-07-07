@@ -40,7 +40,8 @@ $api->version('v1', function ($api) {
 $api->group($params, function ($api) {
     $api->post('/create-group', CreateGroupController::class . '@createGroup');
     $api->get('/search-user', SearchController::class . '@searchUser');
-    $api->get('/profile-photo/update', ProfileController::class . '@uploadProfileImage');
+    $api->get('/user-info', ProfileController::class . '@fetchUserInfo');
+    $api->post('/profile-photo/update', ProfileController::class . '@uploadProfileImage');
 
 
     $api->get('/closed', DataController::class . '@closed');
