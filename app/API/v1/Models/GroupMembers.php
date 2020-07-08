@@ -4,6 +4,7 @@ namespace App\API\v1\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use App\API\v1\Models\Groups;
 
 class GroupMembers extends Model
 {
@@ -18,5 +19,10 @@ class GroupMembers extends Model
     protected $fillable = [
         'group_id', 'user_id', 'user_position'
     ];
+
+
+    public function group(){
+        return $this->belongsTo(Groups::class, 'group_id');
+    }
 
 }
