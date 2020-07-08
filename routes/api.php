@@ -42,6 +42,7 @@ $api->group($params, function ($api) {
     $api->get('/search-user', SearchController::class . '@searchUser');
     $api->get('/user-info', ProfileController::class . '@fetchUserInfo');
     $api->post('/profile-photo/update', ProfileController::class . '@uploadProfileImage');
+    $api->get('/get/groups', CreateGroupController::class . '@fetchGroup');
 
 
     $api->get('/closed', DataController::class . '@closed');
