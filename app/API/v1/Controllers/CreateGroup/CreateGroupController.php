@@ -40,4 +40,11 @@ class CreateGroupController extends Controller
             return $this->standardResponse($e->getMessage(), $data, $e->getCode(), $e->getTrace());
         }
     }
+
+    public function fetchGroup()
+    {
+        $service = new CreateGroupService();
+        $response = $service->fetchGroup(Auth::user()->user_id);
+        return $this->standardResponse('Groups successfully fetched', $response);
+    }
 }
