@@ -4,7 +4,7 @@ namespace App\API\v1\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use App\API\v1\Models\GroupsMembers;
+use App\API\v1\Models\GroupMembers;
 
 class Groups extends Model
 {
@@ -30,6 +30,6 @@ class Groups extends Model
 
 
     public function groupmembers(){
-        return $this->hasMany(GroupsMembers::class, 'id', 'group_id')->orderByDesc("id");
+        return $this->hasMany(GroupMembers::class, 'group_id', 'id')->orderByDesc("id");
     }
 }
