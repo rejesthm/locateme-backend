@@ -9,6 +9,14 @@ use App\API\v1\Services\helpers\UploadFileHelper;
 
 class CreateGroupService
 {
+
+    private $uploadFileHelper;
+
+    function __construct()
+    {
+        $this->uploadFileHelper = new UploadFileHelper("groups");
+    }
+
     public function actionGroup($data)
     {
         if (!empty($data['id'])) {
@@ -55,9 +63,19 @@ class CreateGroupService
             ->with(['group'])
             ->get();
         return $model->map(function ($value, $key) {
-            $uploadFileHelper = new UploadFileHelper("groups");
-            $value->group->group_image_url = $value->group->group_image_url != null ? $uploadFileHelper->getFile($value->group->group_image_url) : null;
+            $value->group->group_image_url = $value->group->group_image_url != null ? $this->uploadFileHelper->getFile($value->group->group_image_url) : null;
             return $value;
         });
+    }
+
+    public function getGroupInformation($id)
+    {
+        $model = Groups::query()
+            ->where('id', $id)
+            ->with(['groupmembers'])
+            ->first();
+        $model->group_image_url = $model->group_image_url != null ? $this->uploadFileHelper->getFile($model->group_image_url) : null;
+
+        return $model;
     }
 }
