@@ -5,6 +5,7 @@ namespace App\API\v1\Services;
 
 use App\API\v1\Models\GroupMembers;
 use App\API\v1\Models\Groups;
+use App\API\v1\Services\helpers\UploadFileHelper;
 
 class CreateGroupService
 {
@@ -45,5 +46,18 @@ class CreateGroupService
                 throw new \Exception("Unable to save " . $member . " from members", 500);
             }
         }
+    }
+
+    public function fetchGroup($userId)
+    {
+        $model = GroupMembers::query()
+            ->where('user_id', $userId)
+            ->with(['group'])
+            ->get();
+        return $model->map(function ($value, $key) {
+            $uploadFileHelper = new UploadFileHelper("groups");
+            $value->group->group_image_url = $value->group->group_image_url != null ? $uploadFileHelper->getFile($value->group->group_image_url) : null;
+            return $value;
+        });
     }
 }

@@ -4,6 +4,7 @@ namespace App\API\v1\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use App\API\v1\Models\GroupMembers;
 
 class Groups extends Model
 {
@@ -26,4 +27,9 @@ class Groups extends Model
     protected $attributes = [
         'group_status' => 1,
     ];
+
+
+    public function groupmembers(){
+        return $this->hasMany(GroupMembers::class, 'group_id', 'id')->orderByDesc("id");
+    }
 }
