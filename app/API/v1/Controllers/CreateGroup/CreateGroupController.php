@@ -24,6 +24,7 @@ class CreateGroupController extends Controller
             'creator_id'    => Auth::user()->id,
             'members'   => $request->input('members'),
         ];
+
         $fileHelper = new UploadFileHelper("groups");
         $url = $fileHelper->uploadFile($request->file('group_image'), $data['group_destination_name']);
 
@@ -46,5 +47,11 @@ class CreateGroupController extends Controller
         $service = new CreateGroupService();
         $response = $service->fetchGroup(Auth::user()->user_id);
         return $this->standardResponse('Groups successfully fetched', $response);
+    }
+
+    public function getGroupInformation(Request $request){
+        $service = new CreateGroupService();
+        $response = $service->getGroupInformation($request->input('id'));
+        return $this->standardResponse('Group information returned successfully', $response);
     }
 }
