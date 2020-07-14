@@ -60,10 +60,14 @@ class CreateGroupService
     {
         $model = GroupMembers::query()
             ->where('user_id', $userId)
-            ->with(['group'])
+            ->with(['group.groupmembers.user'])
             ->get();
         return $model->map(function ($value, $key) {
             $value->group->group_image_url = $value->group->group_image_url != null ? $this->uploadFileHelper->getFile($value->group->group_image_url) : null;
+
+            $value->group->groupmembers = $value->group->groupmembers->map(function ($user, $key) {
+                return $user->user->profile_image = $user->user->profile_image != null ? $this->uploadFileHelper->getFile($user->user->profile_image) : null;
+            });
             return $value;
         });
     }

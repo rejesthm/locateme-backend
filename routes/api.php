@@ -43,7 +43,7 @@ $api->group($params, function ($api) {
     $api->get('/user-info', ProfileController::class . '@fetchUserInfo');
     $api->post('/profile-photo/update', ProfileController::class . '@uploadProfileImage');
     $api->get('/get/groups', CreateGroupController::class . '@fetchGroup');
-    $api->post('/get/group-information', CreateGroupController::class . '@getGroupInformation');
+    $api->get('/get/group-information', CreateGroupController::class . '@getGroupInformation');
 
 
     $api->get('/closed', DataController::class . '@closed');
